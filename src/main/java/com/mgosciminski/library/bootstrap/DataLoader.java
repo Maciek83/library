@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.tomcat.util.buf.B2CConverter;
+import org.graalvm.compiler.hotspot.nodes.G1ArrayRangePostWriteBarrier;
 import org.graalvm.compiler.phases.common.UseTrappingNullChecksPhase;
 import org.hibernate.engine.query.spi.sql.NativeSQLQueryCollectionReturn;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.mgosciminski.library.model.Book;
+import com.mgosciminski.library.model.Quantity;
 import com.mgosciminski.library.model.Role;
 import com.mgosciminski.library.model.RoleType;
 import com.mgosciminski.library.model.User;
@@ -60,13 +62,19 @@ public class DataLoader implements CommandLineRunner {
 		Set<Book> b11 = new HashSet<>();
 		Book book = new Book();
 		book.setTitle("dd");
-		book.setCount(2);
+		Quantity q1 = new Quantity();
+		q1.setNumber(22);
+		q1.setBook(book);
+		book.setQuantity(q1);
 		b11.add(book);
 		
 		Set<Book> b22 = new HashSet<>();
 		Book book2 = new Book();
 		book.setTitle("dd");
-		book.setCount(2);
+		Quantity q2 = new Quantity();
+		q2.setNumber(12);
+		q2.setBook(book2);
+		book2.setQuantity(q2);
 		b22.add(book2);
 		
 		User user = new User();
@@ -84,16 +92,25 @@ public class DataLoader implements CommandLineRunner {
 		user2.setPassword("koko");
 		user2.setRoles(roles2);
 
+
 		
 		userService.saveUser(user);
 		userService.saveUser(user2);
 		
 		Book b1 = new Book();
 		b1.setTitle("title");
-		b1.setCount(4);;
+		Quantity g3 = new Quantity();
+		g3.setBook(b1);
+		g3.setNumber(132);
+		b1.setQuantity(g3);
+		
 		Book b2 = new Book();
 		b2.setTitle("title2");
-		b2.setCount(4);
+		Quantity g4 = new Quantity();
+		g4.setNumber(1234);
+		g4.setBook(b2);
+		b2.setQuantity(g4);
+		
 		
 		bookService.saveBook(b1);
 		bookService.saveBook(b2);

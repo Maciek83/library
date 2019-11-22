@@ -29,6 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);
 		authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
+		
+	
 		return authenticationProvider;
 	}
 
@@ -43,12 +45,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.
+        http.httpBasic().and().
                 authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/books").access("hasAuthority('ADMIN')")
+                .antMatchers("/book/new").hasRole("ADMIN")
+                .antMatchers("/book").hasAnyRole("ADMIN","USER")
                 .and().csrf().disable().formLogin()
                 .usernameParameter("email")
                 .passwordParameter("password");

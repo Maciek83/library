@@ -1,6 +1,8 @@
 package com.mgosciminski.library.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -28,16 +30,20 @@ public class PdfUserDetails implements UserDetails {
 		this.user = user;
 	}
 
-
+	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		
-		return user
-				.getRoles()
-				.stream()
-				.map(role -> new SimpleGrantedAuthority(role.getRole().toString()))
-				.collect(Collectors.toList());
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		
+		user.getRoles().stream()
+		.forEach(r->authorities.add(new SimpleGrantedAuthority(r.getRole().toString())));
+		
+		user.getRoles().stream()
+		.forEach(r->authorities.add(new SimpleGrantedAuthority("ROLE_" + r.getRole().toString())));
+		
+		return authorities;
 	}
 
 	@Override

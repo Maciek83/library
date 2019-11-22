@@ -1,12 +1,10 @@
 package com.mgosciminski.library.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,17 +14,21 @@ public class Book extends BaseEntity {
 	@Column(name = "title")
 	private String title;
 	
-	@Column(name = "count")
-	private Integer count;
+	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "quantity_id", referencedColumnName = "id")
+	private Quantity quantity;
+
 
 	public Book() {
 		super();
 	}
 
-	public Book(String title, Integer count) {
+
+	public Book(String title, Quantity quantity) {
 		super();
 		this.title = title;
-		this.count = count;
+		this.quantity = quantity;
+
 	}
 
 	public String getTitle() {
@@ -37,14 +39,16 @@ public class Book extends BaseEntity {
 		this.title = title;
 	}
 
-	public Integer getCount() {
-		return count;
-	}
 
-	public void setCount(Integer count) {
-		this.count = count;
+	public Quantity getQuantity() {
+		return quantity;
 	}
 
 
+	public void setQuantity(Quantity quantity) {
+		this.quantity = quantity;
+	}
+	
+	
 	
 }

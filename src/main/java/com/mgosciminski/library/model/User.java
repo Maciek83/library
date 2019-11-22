@@ -26,20 +26,28 @@ public class User extends BaseEntity {
 	inverseJoinColumns = @JoinColumn(name="role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name="user_book", 
+	joinColumns = @JoinColumn(name="user_id"), 
+	inverseJoinColumns = @JoinColumn(name="book_id"))
+	private Set<Book> book = new HashSet<>();
 	
 	public User() {
 		super();
 	}
 
-	public User(String email, String password, String name, int active, Set<Role> roles) {
+
+	public User(String email, String password, String name, int active, Set<Role> roles, Set<Book> book) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.active = active;
 		this.roles = roles;
+		this.book = book;
 	}
+
+
 
 	public String getEmail() {
 		return email;
@@ -80,6 +88,16 @@ public class User extends BaseEntity {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	public Set<Book> getBook() {
+		return book;
+	}
+
+	public void setBook(Set<Book> book) {
+		this.book = book;
+	}
+	
+	
 	
 	
 }
