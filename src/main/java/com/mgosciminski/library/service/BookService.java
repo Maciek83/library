@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mgosciminski.library.converter.BookDtoToBook;
+import com.mgosciminski.library.converter.BookCreatorDtoToBook;
+import com.mgosciminski.library.converter.BookToBookDisplayDto;
 import com.mgosciminski.library.converter.BookToBookDto;
-import com.mgosciminski.library.dto.BookDto;
+import com.mgosciminski.library.dto.BookCreatorDto;
+import com.mgosciminski.library.dto.BookDisplayDto;
 import com.mgosciminski.library.model.Book;
 import com.mgosciminski.library.repository.BookRepository;
 
@@ -16,16 +18,17 @@ import com.mgosciminski.library.repository.BookRepository;
 public class BookService {
 
 	private final BookRepository bookRepository;
-	private final BookDtoToBook bookDtoToBookConverter;
-	private final BookToBookDto bookToBookDtoConverter;
+	private final BookCreatorDtoToBook bookDtoToBookConverter;
+	private final BookToBookDisplayDto bookToBookDisplayDtoConverter;
 
 	@Autowired
-	public BookService(BookRepository bookRepository, BookDtoToBook bookDtoToBookConverter,
-			BookToBookDto bookToBookDtoConverter) {
+	public BookService(BookRepository bookRepository, 
+			BookCreatorDtoToBook bookCreatorDtoToBookConverter,
+			BookToBookDisplayDto bookToBookDisplayDtoConverter) {
 		super();
 		this.bookRepository = bookRepository;
-		this.bookDtoToBookConverter = bookDtoToBookConverter;
-		this.bookToBookDtoConverter = bookToBookDtoConverter;
+		this.bookDtoToBookConverter = bookCreatorDtoToBookConverter;
+		this.bookToBookDisplayDtoConverter = bookToBookDisplayDtoConverter;
 	}
 	
 	
@@ -34,11 +37,11 @@ public class BookService {
 		return bookRepository.findAll();
 	}
 	
-	public List<BookDto> findAllBooksDto()
+	public List<BookDisplayDto> findAllBooksDisplayDto()
 	{
 		return bookRepository.findAll()
 				.stream()
-				.map(this::convertBookToBookDto)
+				.map(this::convertBookToBookDisplayDto)
 				.collect(Collectors.toList());
 	}
 
@@ -47,20 +50,18 @@ public class BookService {
 		return bookRepository.save(book);
 	}
 	
-	public Book saveBookFromDto(BookDto bookDto)
+	public BookDisplayDto saveBookFromBookCreatorDto(BookCreatorDto bookDto)
 	{
-		return bookRepository.save(convertBookDtoToBook(bookDto));
+		return convertBookToBookDisplayDto(saveBook(convertBookCreatorDtoToBook(bookDto)));
 	}
 	
-	public Book convertBookDtoToBook(BookDto bookDto)
+	public Book convertBookCreatorDtoToBook(BookCreatorDto bookDto)
 	{
 		return bookDtoToBookConverter.convert(bookDto);
 	}
-	
-	public BookDto convertBookToBookDto(Book book)
+	public BookDisplayDto convertBookToBookDisplayDto(Book book)
 	{
-		return bookToBookDtoConverter.convert(book);
+		return bookToBookDisplayDtoConverter.convert(book);
 	}
-	
 	
 }

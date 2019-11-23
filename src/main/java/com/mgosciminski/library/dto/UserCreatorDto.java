@@ -7,7 +7,7 @@ import javax.validation.constraints.Email;
 
 import io.micrometer.core.lang.NonNull;
 
-public class UserDto {
+public class UserCreatorDto {
 	
 	@NonNull
 	private String name;
@@ -21,13 +21,13 @@ public class UserDto {
 	@NonNull
 	private Set<String> roles = new HashSet<>();
 	
-	public UserDto() {
+	public UserCreatorDto() {
 		super();
 	}
 
 	
 
-	public UserDto(String name, String email, String password, int active, Set<String> roles) {
+	public UserCreatorDto(String name, String email, String password, int active, Set<String> roles) {
 		super();
 		this.name = name;
 		this.email = email;

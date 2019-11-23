@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mgosciminski.library.converter.UserDtoToUser;
-import com.mgosciminski.library.dto.UserDto;
+import com.mgosciminski.library.converter.UserCreatorDtoToUser;
+import com.mgosciminski.library.converter.UserToUserDisplayDto;
+import com.mgosciminski.library.dto.UserCreatorDto;
+import com.mgosciminski.library.dto.UserDisplayDto;
 import com.mgosciminski.library.model.Role;
 import com.mgosciminski.library.model.User;
 import com.mgosciminski.library.repository.UserRepository;
@@ -17,20 +19,23 @@ import com.mgosciminski.library.repository.UserRepository;
 public class UserService {
 
 	private final UserRepository userRepository;
-	private final UserDtoToUser userDtoToUserConverter;
+	private final UserCreatorDtoToUser userCreatorDtoToUserConverter;
 	private final RoleService roleService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final UserToUserDisplayDto userToUserDisplayDtoConverter;
 	
 	@Autowired
 	public UserService(UserRepository userRepository,
 			BCryptPasswordEncoder bCryptPasswordEncoder, 
 			RoleService roleService,
-			UserDtoToUser userDtoToUser) {
+			UserCreatorDtoToUser userCreatorDtoToUser,
+			UserToUserDisplayDto userToUserDisplayDtoConverter) {
 		super();
 		this.userRepository = userRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.roleService = roleService;
-		this.userDtoToUserConverter = userDtoToUser;
+		this.userCreatorDtoToUserConverter = userCreatorDtoToUser;
+		this.userToUserDisplayDtoConverter = userToUserDisplayDtoConverter;
 	}
 	
 	public User findUserByEmail(String email)
@@ -43,14 +48,14 @@ public class UserService {
 		return userRepository.findByName(name);
 	}
 	
-	public User saveUserDto(UserDto userDto)
+	public UserDisplayDto saveUserDto(UserCreatorDto userCreatorDto)
 	{
-		User newUser = userDtoToUserConverter.convert(userDto);
+		User newUser = userCreatorDtoToUserConverter.convert(userCreatorDto);
 		
 		return saveUser(newUser);
 	}
 	
-	public User saveUser(User user) {
+	public UserDisplayDto saveUser(User user) {
 		
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		
@@ -70,7 +75,8 @@ public class UserService {
 		
 		fromDb.setRoles(rolesNew);
 		
-		return userRepository.save(fromDb);
+		
+		return userToUserDisplayDtoConverter.convert(userRepository.save(fromDb)) ;
 		
 	}
 	

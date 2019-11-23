@@ -2,18 +2,18 @@ package com.mgosciminski.library.dto;
 
 import io.micrometer.core.lang.NonNull;
 
-public class BookDto {
+public class BookCreatorDto {
 	
 	@NonNull
 	private String name;
 	@NonNull
 	private Integer number;
 	
-	public BookDto() {
+	public BookCreatorDto() {
 		super();
 	}
 	
-	public BookDto(String name, Integer number) {
+	public BookCreatorDto(String name, Integer number) {
 		super();
 		this.name = name;
 		this.number = number;

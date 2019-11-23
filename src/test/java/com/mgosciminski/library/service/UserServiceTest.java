@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +69,7 @@ class UserServiceTest {
 		
 		User user = new User();
 		
-		when(mockRoleRepository.findByRole(any())).thenReturn(new Role(RoleType.ADMIN));
+		when(mockRoleRepository.findByRole(any())).thenReturn(new Role(RoleType.ADMIN, new HashSet<User>()));
 		when(mockUserRepository.save(any(User.class))).thenReturn(user);
 		//run the test
 		User result = userServiceUnderTest.saveUser(new User());

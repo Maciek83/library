@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.mgosciminski.library.dto.BookDto;
-import com.mgosciminski.library.model.Book;
+import com.mgosciminski.library.dto.BookCreatorDto;
+import com.mgosciminski.library.dto.BookDisplayDto;
 import com.mgosciminski.library.service.BookService;
 
 @Controller
@@ -32,20 +32,20 @@ public class BookController {
 
 
 	@GetMapping(value = "/book")
-	public ResponseEntity<List<BookDto>> showAllBooksDto(){
+	public ResponseEntity<List<BookDisplayDto>> showAllBooksDto(){
 		
-		List<BookDto> books = bookService.findAllBooksDto();
+		List<BookDisplayDto> books = bookService.findAllBooksDisplayDto();
 		
-		return new ResponseEntity<List<BookDto>>(books,HttpStatus.OK);
+		return new ResponseEntity<List<BookDisplayDto>>(books,HttpStatus.OK);
 		
 	}
 	
 	@PostMapping(value="/book/new")
-	public ResponseEntity<BookDto> addNewBook(@Valid @RequestBody BookDto bookDto)
+	public ResponseEntity<BookDisplayDto> addNewBook(@Valid @RequestBody BookCreatorDto bookDto)
 	{
-		bookService.saveBookFromDto(bookDto);
+		BookDisplayDto bookDisplayDto = bookService.saveBookFromBookCreatorDto(bookDto);
 		
-		return new ResponseEntity<BookDto>(bookDto,HttpStatus.CREATED);
+		return new ResponseEntity<BookDisplayDto>(bookDisplayDto,HttpStatus.CREATED);
 	}
 	
 }
