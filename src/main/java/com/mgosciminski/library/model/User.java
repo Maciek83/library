@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,8 +16,10 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User extends BaseEntity {
 	
+	@Column(unique = true)
 	private String email;
 	private String password;
+	@Column(unique = true)
 	private String name;
 	private int active;
 	

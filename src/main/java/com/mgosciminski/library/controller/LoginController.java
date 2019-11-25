@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.mgosciminski.library.dto.UserDisplayDto;
 import com.mgosciminski.library.model.User;
 import com.mgosciminski.library.service.UserService;
 
@@ -28,31 +29,26 @@ public class LoginController {
 	}
 	
 	
-	@GetMapping(value = "/registration")
-	public ResponseEntity<User> registration()
-	{
-		return new ResponseEntity<>(new User(),HttpStatus.OK);
-	}
-	
 	@PostMapping(value = "/registration")
-	public ResponseEntity<User> createNewUser(@Valid User user, BindingResult bindingResult)
+	public ResponseEntity<UserDisplayDto> createNewUser(@Valid User user, BindingResult bindingResult)
 	{
-		User userExists = userService.findUserByEmail(user.getEmail());
+		UserDisplayDto userExists = userService.findUserByEmail(user.getEmail());
 		
 		if (bindingResult.hasErrors()) {
 			
-			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UserDisplayDto>(HttpStatus.BAD_REQUEST);
 		}
 		
 		if(userExists != null)
 		{
-			return new ResponseEntity<User>(userExists,HttpStatus.ACCEPTED);
+		
+			return new ResponseEntity<UserDisplayDto>(userExists,HttpStatus.ACCEPTED);
 		}
 		else 
 		{	
-			User savedUser = userService.saveUser(user);
+			UserDisplayDto savedUser = userService.saveNewUser(user);
 			
-			return new ResponseEntity<User>(savedUser,HttpStatus.CREATED);
+			return new ResponseEntity<UserDisplayDto>(savedUser,HttpStatus.CREATED);
 		}
 	}
 	

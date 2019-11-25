@@ -94,14 +94,14 @@ public class DataLoader implements CommandLineRunner {
 
 
 		
-		userService.saveUser(user);
-		userService.saveUser(user2);
+		userService.saveNewUser(user);
+		userService.saveNewUser(user2);
 		
 		Book b1 = new Book();
 		b1.setTitle("title");
 		Quantity g3 = new Quantity();
 		g3.setBook(b1);
-		g3.setNumber(132);
+		g3.setNumber(12);
 		b1.setQuantity(g3);
 		
 		Book b2 = new Book();
@@ -114,6 +114,10 @@ public class DataLoader implements CommandLineRunner {
 		
 		bookService.saveBook(b1);
 		bookService.saveBook(b2);
+		
+		user2.getBook().add(b1);
+		
+		userService.saveExistingUser(user2);
 		
 	}
 

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.mgosciminski.library.dto.UserDisplayDto;
 import com.mgosciminski.library.model.Role;
 import com.mgosciminski.library.model.RoleType;
 import com.mgosciminski.library.model.User;
@@ -48,34 +49,20 @@ class UserServiceTest {
 	}
 	
 	@Test
-	public void testFindUserByEmail() {
-		
-		//setup
-		final String email = "m.gosciminski@wp.pl";
-		when(mockUserRepository.findByEmail(anyString())).thenReturn(user);
-		
-		//run the test
-		final User result = userServiceUnderTest.findUserByEmail(email);
-		
-		//Verify the result
-		assertEquals(email, result.getEmail());
-		
-	}
-	
-	@Test
 	public void testSaveUser() {
 		
 		//setup
 		
 		User user = new User();
+		user.setName("quest");
 		
 		when(mockRoleRepository.findByRole(any())).thenReturn(new Role(RoleType.ADMIN, new HashSet<User>()));
 		when(mockUserRepository.save(any(User.class))).thenReturn(user);
 		//run the test
-		User result = userServiceUnderTest.saveUser(new User());
+		UserDisplayDto result = userServiceUnderTest.saveUser(user);
 		
 		// verify the result
-		assertEquals(user, result);
+		assertEquals(user.getName(), result.getName());
 	}
 
 }
