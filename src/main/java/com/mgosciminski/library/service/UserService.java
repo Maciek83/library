@@ -140,6 +140,57 @@ public class UserService {
 		return convertUserToUserDisplayDto(saveExistingUser(userFromDb));
 	}
 	
+	public UserDisplayDto giveBackBooks(Long id, BookRentDto bookRentDto) throws NotFoundException
+	{
+		User actualUser = findUserById(id);
+		
+		Set<Book> bookToGiveBack = bookService.findBooksToRent(bookRentDto);
+		
+		Set<Book> actualBooks = actualUser.getBook();
+		
+		Set<Book> filteredBooks = filterBookToGiveBackByActualBooks(bookToGiveBack, actualBooks);
+		
+		User savedUser = substractBooksFromUser(actualUser, filteredBooks);
+		
+		return convertUserToUserDisplayDto(savedUser);
+	}
+	
+	public User substractBooksFromUser(User user, Set<Book> bookToSubstract)
+	{
+		 Set<Book> books = addToEachBookQuantity(bookToSubstract);
+		 
+		 user.getBook().removeAll(books);
+		 
+		 return saveExistingUser(user);
+	}
+	
+	public Set<Book> addToEachBookQuantity(Set<Book> book)
+	{
+		book.stream().forEach(b->{
+			b.getQuantity().setNumber(b.getQuantity().getNumber()+1);
+			bookService.saveBook(b);
+		}
+		);
+		
+		return book;
+	}
+	
+	
+	public Set<Book> filterBookToGiveBackByActualBooks(Set<Book> bookToGiveBack, Set<Book> actualBooks) 
+	{
+		
+		Set<Book> filteredBooks = new HashSet<Book>();
+		
+		for (Book book : bookToGiveBack) {
+			
+			if(actualBooks.contains(book))
+				filteredBooks.add(book);
+		}
+		
+		
+		return filteredBooks;
+	}
+	
 	public Set<Book> substractFromEachBookQuantity(Set<Book> books) throws NotFoundException
 	{
 		for (Book book : books) {

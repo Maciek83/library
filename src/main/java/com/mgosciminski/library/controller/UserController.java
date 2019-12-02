@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,5 +55,12 @@ public class UserController {
 		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
 	}
 	
+	@PostMapping(value = "user/{id}/giveback")
+	public ResponseEntity<UserDisplayDto> giveBackBooks(@PathVariable String id, @Valid @RequestBody BookRentDto bookRentDto) throws NotFoundException
+	{
+		UserDisplayDto userDisplayDto = userService.giveBackBooks(Long.valueOf(id), bookRentDto);
+		
+		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
+	}
 	
 }
