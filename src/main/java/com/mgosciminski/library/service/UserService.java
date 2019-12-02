@@ -65,9 +65,18 @@ public class UserService {
 		return convertUserToUserDisplayDto(findUserByName(name));
 	}
 	
+	public UserDisplayDto findUserDisplayDtoById(Long id) throws NotFoundException
+	{
+		return convertUserToUserDisplayDto(findUserById(id));
+	}
+	
+	public User findUserById(Long id) throws NotFoundException {
+		return userRepository.findById(id).orElseThrow(()-> new NotFoundException("Can't find user with this id."));
+	}
+	
 	public UserDisplayDto saveUserDto(UserCreatorDto userCreatorDto)
 	{
-		User newUser = convertUsetCreatorDtoToUser(userCreatorDto);
+		User newUser = convertUserCreatorDtoToUser(userCreatorDto);
 		
 		return saveNewUser(newUser);
 	}
@@ -77,7 +86,7 @@ public class UserService {
 		return userToUserDisplayDtoConverter.convert(user);
 	}
 	
-	public User convertUsetCreatorDtoToUser(UserCreatorDto userCreatorDto)
+	public User convertUserCreatorDtoToUser(UserCreatorDto userCreatorDto)
 	{
 		return userCreatorDtoToUserConverter.convert(userCreatorDto);
 	}
@@ -116,16 +125,17 @@ public class UserService {
 		
 		Set<Book> filteredBooks = filterNewBooksByActualBooks(actualBooks, newBooks);
 		
-		Set<Book> bubstractedBooks = new HashSet<Book>();
+		Set<Book> substractedBooks = new HashSet<Book>();
+		
 		try {
-			bubstractedBooks = substractFromEachBookQuantity(filteredBooks);
+			substractedBooks = substractFromEachBookQuantity(filteredBooks);
 		} 
 		catch (NotFoundException e) 
 		{
 			e.printStackTrace();
 		}
 		
-		userFromDb.getBook().addAll(bubstractedBooks);
+		userFromDb.getBook().addAll(substractedBooks);
 		
 		return convertUserToUserDisplayDto(saveExistingUser(userFromDb));
 	}
@@ -134,7 +144,7 @@ public class UserService {
 	{
 		for (Book book : books) {
 			
-			if(book.getQuantity().getNumber() <=0)
+			if(book.getQuantity().getNumber() <= 0)
 			{
 				throw new NotFoundException("We don't have this book");
 			}
@@ -155,7 +165,8 @@ public class UserService {
 			{
 				filteredBooks.add(book);
 			}
-			else {
+			else 
+			{
 				System.out.println("I have this book!");
 			}
 		}

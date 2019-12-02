@@ -7,13 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mgosciminski.library.dto.BookRentDto;
 import com.mgosciminski.library.dto.UserCreatorDto;
 import com.mgosciminski.library.dto.UserDisplayDto;
 import com.mgosciminski.library.service.UserService;
+
+import javassist.NotFoundException;
 
 @Controller
 public class UserController {
@@ -40,4 +44,15 @@ public class UserController {
 		
 		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "user{id}")
+	public ResponseEntity<UserDisplayDto> findUser(@RequestParam String id ) throws NotFoundException
+	{
+		
+		UserDisplayDto userDisplayDto = userService.findUserDisplayDtoById(Long.valueOf(id));
+		
+		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
+	}
+	
+	
 }

@@ -59,7 +59,7 @@ class UserServiceTest {
 		when(mockRoleRepository.findByRole(any())).thenReturn(new Role(RoleType.ADMIN, new HashSet<User>()));
 		when(mockUserRepository.save(any(User.class))).thenReturn(user);
 		//run the test
-		UserDisplayDto result = userServiceUnderTest.saveUser(user);
+		UserDisplayDto result = userServiceUnderTest.saveNewUser(user);
 		
 		// verify the result
 		assertEquals(user.getName(), result.getName());
