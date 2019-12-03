@@ -1,5 +1,7 @@
 package com.mgosciminski.library.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 
@@ -30,6 +32,14 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	@GetMapping(value = "user")
+	public ResponseEntity<List<UserDisplayDto>> displayUsers()
+	{
+		List<UserDisplayDto> userDisplayDtos = userService.findAllUsersDisplayDto();
+		
+		return new ResponseEntity<List<UserDisplayDto>>(userDisplayDtos,HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "user/new")
 	public ResponseEntity<UserDisplayDto> createNewUser(@Valid @RequestBody UserCreatorDto userCreatorDto){
 		
@@ -55,7 +65,7 @@ public class UserController {
 		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "user/{id}/giveback")
+	@PostMapping(value = "user/{id}/givebackbook")
 	public ResponseEntity<UserDisplayDto> giveBackBooks(@PathVariable String id, @Valid @RequestBody BookRentDto bookRentDto) throws NotFoundException
 	{
 		UserDisplayDto userDisplayDto = userService.giveBackBooks(Long.valueOf(id), bookRentDto);

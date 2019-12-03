@@ -1,7 +1,10 @@
 package com.mgosciminski.library.service;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,6 +56,20 @@ public class UserService {
 	public User findUserByName(String name)
 	{
 		return userRepository.findByName(name);
+	}
+	
+	public List<User> findAllUsers()
+	{
+		return userRepository.findAll();
+	}
+	
+	public List<UserDisplayDto> findAllUsersDisplayDto()
+	{
+		
+		return findAllUsers()
+				.stream()
+				.map(this::convertUserToUserDisplayDto)
+				.collect(Collectors.toList());
 	}
 	
 	public UserDisplayDto findUserByEmail(String email)
