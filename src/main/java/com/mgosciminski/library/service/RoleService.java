@@ -1,5 +1,8 @@
 package com.mgosciminski.library.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,19 @@ public class RoleService {
 		return r;
 		
 	}
+	
+	public Set<Role> findRolesByStrings(Set<String> names)
+	{
+		Set<Role> roles = new HashSet<Role>();
+		
+		names.stream().forEach(n->{
+			roles.add(findByRole(n)) ;
+		});
+		
+		return roles;
+	}
+	
+	
 	
 	public Role findByRole(String role) {
 		

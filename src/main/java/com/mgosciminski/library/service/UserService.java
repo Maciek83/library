@@ -15,6 +15,7 @@ import com.mgosciminski.library.converter.UserToUserDisplayDto;
 import com.mgosciminski.library.dto.BookRentDto;
 import com.mgosciminski.library.dto.UserCreatorDto;
 import com.mgosciminski.library.dto.UserDisplayDto;
+import com.mgosciminski.library.dto.UserEditDto;
 import com.mgosciminski.library.model.Book;
 import com.mgosciminski.library.model.Role;
 import com.mgosciminski.library.model.User;
@@ -192,7 +193,6 @@ public class UserService {
 		return book;
 	}
 	
-	
 	public Set<Book> filterBookToGiveBackByActualBooks(Set<Book> bookToGiveBack, Set<Book> actualBooks) 
 	{
 		
@@ -240,5 +240,19 @@ public class UserService {
 		}
 		
 		return filteredBooks;
+	}
+	
+	public UserDisplayDto editUser(Long id, UserEditDto userEditDto) throws NotFoundException
+	{
+		User userFromDb = findUserById(id);
+		
+		Set<Role> newRoles = roleService.findRolesByStrings(userEditDto.getRoles());
+		
+		userFromDb.setActive(userEditDto.getActive());
+		userFromDb.setRoles(newRoles);
+		
+		UserDisplayDto userDisplayDto = convertUserToUserDisplayDto(saveExistingUser(userFromDb));
+		
+		return userDisplayDto;
 	}
 }

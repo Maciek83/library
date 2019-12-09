@@ -20,7 +20,7 @@ public class UserCreatorDtoToUser implements Converter<UserCreatorDto, User> {
 		User newUser = new User();
 		newUser.setName(source.getName());
 		newUser.setEmail(source.getEmail());
-		newUser.setActive(source.getActive());
+		newUser.setActive(1);
 		newUser.setPassword(source.getPassword());
 		
 		Set<Role> roles = new HashSet<Role>();

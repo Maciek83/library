@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mgosciminski.library.dto.BookRentDto;
 import com.mgosciminski.library.dto.UserCreatorDto;
 import com.mgosciminski.library.dto.UserDisplayDto;
+import com.mgosciminski.library.dto.UserEditDto;
 import com.mgosciminski.library.service.UserService;
 
 import javassist.NotFoundException;
@@ -32,7 +33,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@GetMapping(value = "user")
+	@GetMapping(value = "users")
 	public ResponseEntity<List<UserDisplayDto>> displayUsers()
 	{
 		List<UserDisplayDto> userDisplayDtos = userService.findAllUsersDisplayDto();
@@ -56,7 +57,7 @@ public class UserController {
 		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "user{id}")
+	@GetMapping(value = "/user")
 	public ResponseEntity<UserDisplayDto> findUser(@RequestParam String id ) throws NotFoundException
 	{
 		
@@ -71,6 +72,14 @@ public class UserController {
 		UserDisplayDto userDisplayDto = userService.giveBackBooks(Long.valueOf(id), bookRentDto);
 		
 		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "user/{id}/edit")
+	public ResponseEntity<UserDisplayDto> editUser(@PathVariable String id, @Valid @RequestBody UserEditDto userEditDto) throws NumberFormatException, NotFoundException
+	{
+		UserDisplayDto userDisplayDto = userService.editUser(Long.valueOf(id), userEditDto);
+		
+		return new ResponseEntity<UserDisplayDto>(userDisplayDto,HttpStatus.ACCEPTED);
 	}
 	
 }
