@@ -1,11 +1,15 @@
 package com.mgosciminski.library.service;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mgosciminski.library.converter.BookCreatorDtoToBook;
@@ -36,14 +40,26 @@ public class BookService {
 	}
 	
 	
-	public List<Book> findAllBooks()
+	public Iterable<Book> findAllBooks()
 	{
 		return bookRepository.findAll();
 	}
 	
+	public List<BookDisplayDto> findBooksPage(int site, int elements)
+	{
+		Pageable pageable = PageRequest.of(site, elements);
+		List<BookDisplayDto> page = bookRepository
+				.findAll(pageable)
+				.stream()
+				.map(this::convertBookToBookDisplayDto)
+				.collect(Collectors.toList());
+		
+		return page;
+	}
+	
 	public List<BookDisplayDto> findAllBooksDisplayDto()
 	{
-		return bookRepository.findAll()
+		return ((Collection<Book>) bookRepository.findAll())
 				.stream()
 				.map(this::convertBookToBookDisplayDto)
 				.collect(Collectors.toList());

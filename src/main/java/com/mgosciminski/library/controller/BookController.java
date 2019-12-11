@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mgosciminski.library.dto.BookCreatorDto;
 import com.mgosciminski.library.dto.BookDisplayDto;
@@ -32,9 +33,12 @@ public class BookController {
 
 
 	@GetMapping(value = "/book")
-	public ResponseEntity<List<BookDisplayDto>> showAllBooksDto(){
+	public ResponseEntity<List<BookDisplayDto>> showAllBooksDto(
+			@RequestParam String page, 
+			@RequestParam String number){
 		
-		List<BookDisplayDto> books = bookService.findAllBooksDisplayDto();
+		
+		List<BookDisplayDto> books = bookService.findBooksPage(Integer.valueOf(page), Integer.valueOf(number));
 		
 		return new ResponseEntity<List<BookDisplayDto>>(books,HttpStatus.OK);
 		
