@@ -16,6 +16,7 @@ import com.mgosciminski.library.converter.BookCreatorDtoToBook;
 import com.mgosciminski.library.converter.BookToBookDisplayDto;
 import com.mgosciminski.library.dto.BookCreatorDto;
 import com.mgosciminski.library.dto.BookDisplayDto;
+import com.mgosciminski.library.dto.BookEditDto;
 import com.mgosciminski.library.dto.BookRentDto;
 import com.mgosciminski.library.model.Book;
 import com.mgosciminski.library.repository.BookRepository;
@@ -55,6 +56,18 @@ public class BookService {
 				.collect(Collectors.toList());
 		
 		return page;
+	}
+	
+	public BookDisplayDto editBookNumber(Long id, BookEditDto bookEditDto) throws NotFoundException
+	{
+		Book bookFromDB = findBookById(id);
+		
+		bookFromDB.getQuantity().setNumber(bookEditDto.getQuantity());
+		bookFromDB.setTitle(bookEditDto.getTitle());
+
+		Book saved = saveBook(bookFromDB);
+		
+		return convertBookToBookDisplayDto(saved);
 	}
 	
 	public List<BookDisplayDto> findAllBooksDisplayDto()
